@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Telegram Bot</title>
+<!-- Bot creado en Javascript (ES5) por @StringManolo -->
+	
+<!-- Necesitas darle tiempo al bot para que envie y elimine todos los mensajes.
+No refresques muy rápido en bots con muchas peticiones pendientes.
+El bot procesa hasta 100 mensajes simultaneos.
+Esto podrían ser miles de peticiones. -->
+<meta http-equiv="refresh" content="12">
+<style>
+textarea {
+ height: 30em;
+ width: 50em;
+  display: block;
+}
+</style>
+</head>
+<body>
+<textarea id="res"></textarea>
+<script>(function() { 
+/* Token de tu cuenta Bot de Telegram. Si no tienes bot créalo hablándole a @BotFather.
+https://t.me/BotFather 
+/newbot
+Te pedirá el nombre del bot, el nombre de la cuenta y te dará el token. */
+var TOKEN = "*********:********-**************************";
+
+/* Tu token de pastebin.com/api */
+var TPASTEBIN = "********************************";
+
+/* Añade tu chat de logs en la peticionGET dentro de function Loggear */
+
+
+/* Funcion para reducir código. */
+function PeticionGET(url, callback) {
+  var peticion = new XMLHttpRequest();
+  peticion.open("GET", url , true);
+  peticion.send();
+  peticion.onreadystatechange = function() {
+    if (peticion.readyState == 4) {
+      if (peticion.status == 0 || peticion.status == 200) {
+        callback(peticion.responseText);
+      }
+    }
+  }      
+}
+
+/* Añade CHATID (remplaza asteriscos) para loggear actividad del bot en un chat.
+Debes crear el bot, crear un grupo de telegram, meter al bot en el grupo, darle permisos de admin en el grupo, abrir este código en el navegador copiar el ID de tu chat y ponerlo aquí */
+function Loggear(data) {
+  PeticionGET("https://api.telegram.org/bot" + TOKEN + "/sendMessage?chat_id=" + "**************" + "&text=" + data);
+}
+
+/* Obten los mensajes de la API de Telegram */
+(function() {
+  function ObtenerMensajesTelegram(respuesta) {
+    var data = JSON.parse(respuesta);
+    var updateIds = [],
+    chatId = [],
+    chatFirstName = [],
+    chatUsername = [],
+    chatText = [];
+    
+/* Por cada mensaje... */
+    for (var i = 0; i < data["result"].length; ++i) {
+/* Obten id de actualización. (Para borrar los mensajes) */
+      updateIds[i] = data["result"][i]["update_id"];
+/* Obten id del chat. (Para saber a que chat contestar el mensaje) */
+      chatId[i] = data["result"][i]["message"]["chat"]["id"];
+/* Obten nombre del usuario que escribió el mensaje. */
+      chatFirstName[i] = data["result"][i]["message"]["from"]["first_name"]; 
+/* Obten nombre de cuenta del usuario que escribió el mensaje. */
+      chatUsername[i] = "@" + (data["result"][i]["message"]["from"]["username"]); 
+/* Obten el texto que envió el usuario. */
+      chatText[i] = data["result"][i]["message"]["text"]; 
+    }
+/* Borra los mensajes de la API (Ya están guardados en el array) */
+    PeticionGET("https://api.telegram.org/bot" + TOKEN + "/getUpdates?offset=" + "" + ((updateIds[updateIds.length-1]) + 1));
+        
+    var respuestaBot = " \n\n", mensajeEnviar = "";
+/* Por cada mensaje recibido... */
+    for (var i = 0; i < chatId.length; ++i) {
+/* Prepara la url */
+      mensajeEnviar = "https://api.telegram.org/bot" + TOKEN + "/sendMessage?chat_id=" + chatId[i] + "&text=";
+
+/* Aquí están los comandos a buscar en el texto de los usuarios.
+Se usan expresiones regulares para hacer búsquedas globales, caseinsensitive y multilinea */
+      if ( /\/comandos/gim.test(chatText[i]) ) {
+        mensajeEnviar += "Comandos disponibles: " +"%0A%0AHola" + 
+        "%0AEl bot saluda cuando alguien escriba hola." +
+        "%0A%0AAdios" + 
+        "%0AEl bot se despide cuando alguien escriba adios." +
+        "%0A%0Ate llamas?" + 
+        "%0AEl bot saluda cuando alguien escriba te llamas?." +
+        "%0A%0ACpu" + 
+        "%0AMuestra la CPU que está usando el bot." +
+        "%0A%0AFecha" + 
+        "%0AMuestra la fecha en el cliente del bot." +
+        "%0A%0APublicar:lenguaje>codigo" +
+        "%0APublica en pastebin tu código en el lenguaje que indiques. Ej:" +
+        "%0Apublicar:python>print(\"Hola\");" +
+        "%0A%0APing:google.com" + 
+        "%0AHaz ping al sitio o IP indicada." +
+        "%0A%0ADominios:flores" +
+        "%0ALista dominios que contengan la palabra indicada." +
+        "%0A%0ALista lenguajes publicar:%0Aapache>%0Aarduino>%0Abash>%0Abatch>%0Ac>%0Acpp>%0Acsharp>%0Acss>%0Adelphi>%0Aes>%0Aemail>%0Ahtml>%0Ahtml5>%0Ajava>%0Ajavascript>%0Ajson>" +
+        "%0Akotlin>%0Alua>%0Amarkdown>%0Asql>%0Aperl>%0Aphp>%0Apython>%0Ar>%0Aescala>%0Avbnet>%0Avim>%0Axml>";
+      } 
+      if ( /Hola/gim.test(chatText[i]) ) {
+        mensajeEnviar += "Hola " + chatFirstName[i] +".%0A";
+      } if ( /Adios/gim.test(chatText[i]) ) {
+        mensajeEnviar += "Adios " + chatFirstName[i] +".%0A";
+      } if ( /te llamas?/gim.test(chatText[i]) ) {
+        mensajeEnviar += "Tú te llamas " + chatFirstName[i] +"! Jeje%0A";
+      } if ( /cpu/gim.test(chatText[i]) ) {
+        mensajeEnviar += "Yo uso " + navigator.platform +"%0A";
+      } if ( /fecha/gim.test(chatText[i]) ) {
+        mensajeEnviar += Date() +"%0A";
+      } if ( /Publicar:/gim.test(chatText[i]) ) {
+        var lenguaje = "text";
+        var indice = 8;
+        if (chatText[i].substr(9, 3) == "js>" ) {
+          indice += 4;
+          lenguaje = "javascript";
+        } else if (chatText[i].substr(9, 4) == "cpp>" ) {
+          indice += 5;
+          lenguaje = "cpp";
+        } else if (chatText[i].substr(9, 7) == "apache>" ) {
+          indice += 8;
+          lenguaje = "apache";
+        }  else if (chatText[i].substr(9, 8) == "arduino>" ) {
+          indice += 9;
+          lenguaje = "arduino";
+        }  else if (chatText[i].substr(9, 5) == "bash>" ) {
+          indice += 6;
+          lenguaje = "bash";
+        }  else if (chatText[i].substr(9, 6) == "batch>" ) {
+          indice += 7;
+          lenguaje = "dos";
+        }  else if (chatText[i].substr(9, 2) == "c>" ) {
+          indice += 3;
+          lenguaje = "c";
+        }  else if (chatText[i].substr(9, 7) == "csharp>" ) {
+          indice += 8;
+          lenguaje = "csharp";
+        }  else if (chatText[i].substr(9, 4) == "css>" ) {
+          indice += 5;
+          lenguaje = "css";
+        }  else if (chatText[i].substr(9, 7) == "delphi>" ) {
+          indice += 8;
+          lenguaje = "delphi";
+        }  else if (chatText[i].substr(9, 3) == "es>" ) {
+          indice += 4;
+          lenguaje = "ecmascript";
+        }  else if (chatText[i].substr(9, 6) == "email>" ) {
+          indice += 7;
+          lenguaje = "email";
+        }  else if (chatText[i].substr(9, 5) == "html>" ) {
+          indice += 6;
+          lenguaje = "html5";
+        }  else if (chatText[i].substr(9, 6) == "html5>" ) {
+          indice += 7;
+          lenguaje = "html5";
+        }  else if (chatText[i].substr(9, 5) == "java>" ) {
+          indice += 6;
+          lenguaje = "java";
+        }  else if (chatText[i].substr(9, 5) == "json>" ) {
+          indice += 6;
+          lenguaje = "json";
+        }  else if (chatText[i].substr(9, 7) == "kotlin>" ) {
+          indice += 8;
+          lenguaje = "kotlin";
+        }  else if (chatText[i].substr(9, 4) == "lua>" ) {
+          indice += 5;
+          lenguaje = "lua";
+        }  else if (chatText[i].substr(9, 9) == "markdown>" ) {
+          indice += 10;
+          lenguaje = "markdown";
+        }  else if (chatText[i].substr(9, 4) == "sql>" ) {
+          indice += 5;
+          lenguaje = "mysql";
+        }  else if (chatText[i].substr(9, 5) == "perl>" ) {
+          indice += 6;
+          lenguaje = "perl";
+        }  else if (chatText[i].substr(9, 4) == "php>" ) {
+          indice += 5;
+          lenguaje = "php";
+        }  else if (chatText[i].substr(9, 7) == "python>" ) {
+          indice += 8;
+          lenguaje = "python";
+        }  else if (chatText[i].substr(9, 2) == "r>" ) {
+          indice += 3;
+          lenguaje = "rsplus";
+        }  else if (chatText[i].substr(9, 6) == "scala>" ) {
+          indice += 7;
+          lenguaje = "scala";
+        }  else if (chatText[i].substr(9, 6) == "vbnet>" ) {
+          indice += 7;
+          lenguaje = "vbnet";
+        }  else if (chatText[i].substr(9, 4) == "vim>" ) {
+          indice += 5;
+          lenguaje = "vim";
+        }  else if (chatText[i].substr(9, 4) == "xml>" ) {
+          indice += 5;
+          lenguaje = "xml";
+        } 
+
+        
+
+        mensajeEnviar += "Enviando... %0A";
+        pasteBin(chatText[i].substr(indice), chatId[i], lenguaje);
+      } if ( /PING:/gim.test(chatText[i]) ) {
+        mensajeEnviar +=  "Comprobando " + chatText[i].substr(5) + "...%0A";
+/* ObtenerRespuesta es similar a PeticiónGET() pero con más parámetros para manejar comandos de red similares */
+        ObtenerRespuesta(chatText[i].substr(5), chatId[i], "PING");
+      } if ( /DOMINIOS:/gim.test(chatText[i]) ) {
+        mensajeEnviar +=  "Comprobando dominios con " + chatText[i].substr(9) + "...%0A";
+        ObtenerRespuesta(chatText[i].substr(9), chatId[i], "DOMINIO");
+      }/*else {
+        Aquí de momento nada.
+        mensajeEnviar = "https://example.com";
+      }*/
+
+/* Contesta si procede */
+      PeticionGET(mensajeEnviar);
+    }
+/* Logs en el navegador de los mensajes. (Util por si quieres guardar logs por si crashean y demás. Puedes usar localStorage que tiene hasta 5MB */
+    document.querySelector("#res").value = "ID: " + chatId + "\nCHAT: " +  chatText + "\nNOMBRE: " + chatFirstName + "\nCUENTA: " + chatUsername;
+
+    /* Si hay mensajes, envia el log a un chat. (El iD del chat al que se envìan los log está hardcodeado en función Loggear) */
+    if(chatId[0]) {
+      Loggear("ID: " + chatId + "%0ACHAT: " +  chatText + "%0ANOMBRE: " + chatFirstName + "%0ACUENTA: " + chatUsername);
+    }
+  }
+/* Pide los mensajes a la API, y ejecuta la función ObtenerMensajesTelegram().
+Se pasa como referencia y tiene como parámentro la respuesta de la petición con los mensajes de la API. */
+  PeticionGET("https://api.telegram.org/bot" + TOKEN + "/getUpdates", ObtenerMensajesTelegram);
+/* Fin de IIFE anónima */
+})();
+
+
+function pasteBin(texto, chid, lenguaje) {
+  var pb = new XMLHttpRequest();
+  pb.open("POST", "https://cors-anywhere.herokuapp.com/https://pastebin.com/api/api_post.php", true);
+  pb.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  pb.send("api_dev_key=" + TPASTEBIN + "&api_option=paste&api_paste_private=0&api_paste_name=codigo&api_paste_expire_date=10M&api_paste_format=" + lenguaje + "&api_paste_code=" + texto);
+  pb.onreadystatechange = function() {
+    if (pb.readyState == 4 && (pb.status == 0 || pb.status == 200)) {
+      Loggear("Link de PasteBin Generado: " + pb.responseText)
+      PeticionGET("https://api.telegram.org/bot" + TOKEN + "/sendMessage?chat_id=" + chid + "&text=" + pb.responseText);
+    }
+  }
+}
+
+
+/* Comandos ping y dominios implementados usando las API públicas de:
+http://ip-api.com, https://cors-anywhere.herokuapp.com, y https://api.domainsdb.info */
+function ObtenerRespuesta(IP, chid, modo) {
+  
+  var Url = "";
+/* En base al comando usa la API correspondiente... */
+  if (modo == "PING") {
+    Url = "http://ip-api.com/json/" + IP + "?fields=17039359";
+  } else if (modo == "DOMINIO") {
+    Url = "https://cors-anywhere.herokuapp.com/https://api.domainsdb.info/v1/domains/search?domain=" + IP + "&zone=com";
+  }
+  
+/* Parsea las respuestas */
+  function ApisRed(respuesta) {
+    var respIP = "", respIP2 = [];
+    respIP = JSON.parse(respuesta);
+    if (modo == "PING") {
+      respIP = "País: " + respIP["country"] + "%0ARegión: " + respIP["regionName"] +
+      "%0ACiudad: " + respIP["city"] + "%0ACódigo Postal: " + respIP["zip"] + "%0AGelocalización Latitud:" +
+      respIP["lat"] + "%0ALogitud: " + respIP["lon"] + "%0AProveedor De Acceso A Internet: " + respIP["isp"] +
+      "%0AOrganización: " + respIP["org"] + "%0AResolvedor de DNS: " + respIP["reverse"] + "%0AIP: " + respIP["query"];
+    } if (modo == "DOMINIO") {         
+      var rDOMINIOS = [],
+      rFECHACREACION = [],
+      rPAIS = [],
+      rFECHAACTU = [],
+      rACTIVO = [],
+      rA = [],
+      rNS = [];
+      for (var i = 0; i < respIP["domains"].length; ++i) {
+        rDOMINIOS[i] = "Dominio: " + respIP["domains"][i]["domain"];
+        rFECHACREACION[i] = "Fecha De Registro: " +respIP["domains"][i]["create_date"];
+        rPAIS[i] = "País: " + respIP["domains"][i]["country"]; 
+        rFECHAACTU[i] = "Fecha Última Actualización: " + respIP["domains"][i]["update_date"];
+        rACTIVO[i] = "Dominio Suspendido: " + respIP["domains"][i]["isDead"];
+        rA[i] = "Registro A: " + respIP["domains"][i]["A"];
+        rNS[i] = "Registros NS: " + respIP["domains"][i]["NS"];
+      }
+         
+      for(var i = 0; i < rDOMINIOS.length; ++i) {
+        respIP2[i] = (+1 +i) + ". " + rDOMINIOS[i] + "%0A" + rFECHACREACION[i] + "%0A" + rPAIS[i] + "%0A" + rFECHAACTU[i] +
+        "%0A" + rACTIVO[i] + "%0A" + rA[i] + "%0A" + rNS[i];
+         
+/* Envia a Telegram los dominios. */
+        PeticionGET("https://api.telegram.org/bot" + TOKEN + "/sendMessage?chat_id=" + chid + "&text=" + respIP2[i]);
+      }
+        
+/* Si no es el comando Dominio... (Hecho así para manejar utilidades futuras compartiendo código de PING */
+    } else {
+/* Envia a Telegram la respuesta de hacer Ping. */
+      PeticionGET("https://api.telegram.org/bot" + TOKEN + "/sendMessage?chat_id=" + chid + "&text=" + respIP);
+    }
+  }
+/* Envia la petición a la API que corresponda, parsea y envia a Telegram. */
+  PeticionGET(Url, ApisRed);
+}
+})();</script>
+</body>
+</html>
