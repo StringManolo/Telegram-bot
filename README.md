@@ -1,10 +1,12 @@
 # TelegramBot  
-##creado en Javascript (ES5)  
-###por @StringManolo.
+## creado en Javascript (ES5)  
+### por @StringManolo.
 
-Live versión en [@RabocopBot](https://t.me/RabocopBot) Contestará cuando lo abra en el navegador.  
+Live versión en [@RabocopBot](https://t.me/RabocopBot)  
+Contestará cuando lo abra en el navegador.  
 _No está operativo 24/7_ 
 
+  
 *_Comandos disponibles_*: 
 
 * *Hola*  
