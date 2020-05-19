@@ -68,12 +68,18 @@ Lista _dominios_ que contengan la palabra indicada.
     * xml>
 
 
-* *Apis utilizadas:*
+* *Apis utilizadas:*  
     *[Cors-Anywhere](https://cors-anywhere.herokuapp.com)  
     Para realizar peticiones entre dominios.  
 
-    *[Pastebin](https://pastebin.com/api/api_post.php)
+    *[Pastebin](https://pastebin.com/api/api_post.php)  
     Facilitar la lectura de pequeños códigos.
 
-    *
+    *[Ip-api](http://ip-api.com/json)  
+    Realizar ping sin mantener servidor.
+
+
+    *[DomainsDB](https://api.domainsdb.info)  
+    Consultar dominios existentes.
+  
   
