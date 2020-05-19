@@ -85,5 +85,5 @@ Lista _dominios_ que contengan la palabra indicada.
     Consultar dominios existentes.
   
   
-Para cualquier consulta podeis dirigiros a mi por telegram.
+Para cualquier consulta podeis dirigiros a mi por telegram.  
 _Agradezco críticas_
