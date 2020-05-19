@@ -9,7 +9,7 @@
 No refresques muy rápido en bots con muchas peticiones pendientes.
 El bot procesa hasta 100 mensajes simultaneos.
 Esto podrían ser miles de peticiones. -->
-<meta http-equiv="refresh" content="12">
+<meta http-equiv="refresh" content="11">
 <style>
 textarea {
  height: 30em;
@@ -20,18 +20,16 @@ textarea {
 </head>
 <body>
 <textarea id="res"></textarea>
+<!-- button Activar IA -->
 <script>(function() { 
 /* Token de tu cuenta Bot de Telegram. Si no tienes bot créalo hablándole a @BotFather.
 https://t.me/BotFather 
 /newbot
 Te pedirá el nombre del bot, el nombre de la cuenta y te dará el token. */
-var TOKEN = "*********:********-**************************";
-
-/* Tu token de pastebin.com/api */
+var TOKEN = "********:********-*************************";
+/* Pide el token registrándote en https://pastebin.com/api */
 var TPASTEBIN = "********************************";
-
-/* Añade tu chat de logs en la peticionGET dentro de function Loggear */
-
+/* Añade tu chat de logs en function Loggear(data) { ... */
 
 /* Funcion para reducir código. */
 function PeticionGET(url, callback) {
@@ -47,10 +45,9 @@ function PeticionGET(url, callback) {
   }      
 }
 
-/* Añade CHATID (remplaza asteriscos) para loggear actividad del bot en un chat.
-Debes crear el bot, crear un grupo de telegram, meter al bot en el grupo, darle permisos de admin en el grupo, abrir este código en el navegador copiar el ID de tu chat y ponerlo aquí */
+/*Remplaza asteriscos por el id de un chat para loggear la actividad del bot. */
 function Loggear(data) {
-  PeticionGET("https://api.telegram.org/bot" + TOKEN + "/sendMessage?chat_id=" + "**************" + "&text=" + data);
+  PeticionGET("https://api.telegram.org/bot" + TOKEN + "/sendMessage?chat_id=" + "*************"+ "&text=" + data + "&parse_mode=html");
 }
 
 /* Obten los mensajes de la API de Telegram */
@@ -88,28 +85,32 @@ function Loggear(data) {
 /* Aquí están los comandos a buscar en el texto de los usuarios.
 Se usan expresiones regulares para hacer búsquedas globales, caseinsensitive y multilinea */
       if ( /\/comandos/gim.test(chatText[i]) ) {
-        mensajeEnviar += "Comandos disponibles: " +"%0A%0AHola" + 
-        "%0AEl bot saluda cuando alguien escriba hola." +
-        "%0A%0AAdios" + 
-        "%0AEl bot se despide cuando alguien escriba adios." +
-        "%0A%0Ate llamas?" + 
-        "%0AEl bot saluda cuando alguien escriba te llamas?." +
-        "%0A%0ACpu" + 
-        "%0AMuestra la CPU que está usando el bot." +
-        "%0A%0AFecha" + 
-        "%0AMuestra la fecha en el cliente del bot." +
-        "%0A%0APublicar:lenguaje>codigo" +
-        "%0APublica en pastebin tu código en el lenguaje que indiques. Ej:" +
-        "%0Apublicar:python>print(\"Hola\");" +
-        "%0A%0APing:google.com" + 
-        "%0AHaz ping al sitio o IP indicada." +
-        "%0A%0ADominios:flores" +
-        "%0ALista dominios que contengan la palabra indicada." +
-        "%0A%0ALista lenguajes publicar:%0Aapache>%0Aarduino>%0Abash>%0Abatch>%0Ac>%0Acpp>%0Acsharp>%0Acss>%0Adelphi>%0Aes>%0Aemail>%0Ahtml>%0Ahtml5>%0Ajava>%0Ajavascript>%0Ajson>" +
+        mensajeEnviar += "<b><i>Comandos disponibles</i></b>: " +"%0A%0A<b>Hola</b>" + 
+        "%0AEl bot saluda cuando alguien escriba <i>hola</i>." +
+        "%0A%0A<b>Adios</b>" + 
+        "%0AEl bot se despide cuando alguien escriba <i>adios</i>." +
+        "%0A%0A<b>Codigo Fuente</b>" +
+        "%0ALink hacia el <a href=\"https://github.com/StringManolo/Telegram-bot\">código fuente</a>. Puede no ser la versión más reciente. " +
+        "%0A%0A<b>te llamas?</b>" + 
+        "%0AEl bot saluda cuando alguien escriba <i>te llamas?</i>." +
+        "%0A%0A<b>Cpu</b>" + 
+        "%0AMuestra la <i>CPU</i> que está usando el bot." +
+        "%0A%0A<b>Fecha</b>" + 
+        "%0AMuestra la <i>fecha</i> en el cliente del bot." +
+        "%0A%0A<b>Publicar:lenguaje>codigo</b>" +
+        "%0APublica en <a href=\"https://pastebin.com\">pastebin</a> tu código en el lenguaje que indiques. Ej:" +
+        "%0A<i>publicar:python>print(\"Hola\");</i>" +
+        "%0A%0A<b>Ping:google.com</b>" + 
+        "%0AHaz <i>ping</i> al sitio o IP indicada." +
+        "%0A%0A<b>Dominios:flores</b>" +
+        "%0ALista <i>dominios</i> que contengan la palabra indicada." +
+        "%0A%0A<b>Lista lenguajes publicar</b>:%0Aapache>%0Aarduino>%0Abash>%0Abatch>%0Ac>%0Acpp>%0Acsharp>%0Acss>%0Adelphi>%0Aes>%0Aemail>%0Ahtml>%0Ahtml5>%0Ajava>%0Ajs>%0Ajson>" +
         "%0Akotlin>%0Alua>%0Amarkdown>%0Asql>%0Aperl>%0Aphp>%0Apython>%0Ar>%0Aescala>%0Avbnet>%0Avim>%0Axml>";
       } 
       if ( /Hola/gim.test(chatText[i]) ) {
         mensajeEnviar += "Hola " + chatFirstName[i] +".%0A";
+      } if ( /Codigo Fuente/gim.test(chatText[i]) ) {
+        mensajeEnviar += "Hola " + chatFirstName[i] +". Puedes ver el código pinchando <a href=\"https://github.com/StringManolo/Telegram-bot\">aquí</a>.%0A";
       } if ( /Adios/gim.test(chatText[i]) ) {
         mensajeEnviar += "Adios " + chatFirstName[i] +".%0A";
       } if ( /te llamas?/gim.test(chatText[i]) ) {
@@ -216,7 +217,7 @@ Se usan expresiones regulares para hacer búsquedas globales, caseinsensitive y 
 /* ObtenerRespuesta es similar a PeticiónGET() pero con más parámetros para manejar comandos de red similares */
         ObtenerRespuesta(chatText[i].substr(5), chatId[i], "PING");
       } if ( /DOMINIOS:/gim.test(chatText[i]) ) {
-        mensajeEnviar +=  "Comprobando dominios con " + chatText[i].substr(9) + "...%0A";
+        mensajeEnviar +=  "Comprobando dominios con <b>" + chatText[i].substr(9) + "</b>...%0A";
         ObtenerRespuesta(chatText[i].substr(9), chatId[i], "DOMINIO");
       }/*else {
         Aquí de momento nada.
@@ -224,14 +225,14 @@ Se usan expresiones regulares para hacer búsquedas globales, caseinsensitive y 
       }*/
 
 /* Contesta si procede */
-      PeticionGET(mensajeEnviar);
+      PeticionGET(mensajeEnviar + "&parse_mode=html");
     }
 /* Logs en el navegador de los mensajes. (Util por si quieres guardar logs por si crashean y demás. Puedes usar localStorage que tiene hasta 5MB */
     document.querySelector("#res").value = "ID: " + chatId + "\nCHAT: " +  chatText + "\nNOMBRE: " + chatFirstName + "\nCUENTA: " + chatUsername;
 
     /* Si hay mensajes, envia el log a un chat. (El iD del chat al que se envìan los log está hardcodeado en función Loggear) */
     if(chatId[0]) {
-      Loggear("ID: " + chatId + "%0ACHAT: " +  chatText + "%0ANOMBRE: " + chatFirstName + "%0ACUENTA: " + chatUsername);
+      Loggear("<b>ID</b>: " + chatId + "%0A<b>CHAT</b>: " +  chatText + "%0A<b>NOMBRE</b>: " + chatFirstName + "%0A<b>CUENTA</b>: " + chatUsername);
     }
   }
 /* Pide los mensajes a la API, y ejecuta la función ObtenerMensajesTelegram().
@@ -249,7 +250,7 @@ function pasteBin(texto, chid, lenguaje) {
   pb.onreadystatechange = function() {
     if (pb.readyState == 4 && (pb.status == 0 || pb.status == 200)) {
       Loggear("Link de PasteBin Generado: " + pb.responseText)
-      PeticionGET("https://api.telegram.org/bot" + TOKEN + "/sendMessage?chat_id=" + chid + "&text=" + pb.responseText);
+      PeticionGET("https://api.telegram.org/bot" + TOKEN + "/sendMessage?chat_id=" + chid + "&text=" + pb.responseText +"&parse_mode=html");
     }
   }
 }
@@ -272,10 +273,10 @@ function ObtenerRespuesta(IP, chid, modo) {
     var respIP = "", respIP2 = [];
     respIP = JSON.parse(respuesta);
     if (modo == "PING") {
-      respIP = "País: " + respIP["country"] + "%0ARegión: " + respIP["regionName"] +
-      "%0ACiudad: " + respIP["city"] + "%0ACódigo Postal: " + respIP["zip"] + "%0AGelocalización Latitud:" +
-      respIP["lat"] + "%0ALogitud: " + respIP["lon"] + "%0AProveedor De Acceso A Internet: " + respIP["isp"] +
-      "%0AOrganización: " + respIP["org"] + "%0AResolvedor de DNS: " + respIP["reverse"] + "%0AIP: " + respIP["query"];
+      respIP = "<b>País</b>: " + respIP["country"] + "%0A<b>Región</b>: " + respIP["regionName"] +
+      "%0A<b>Ciudad</b>: " + respIP["city"] + "%0A<b>Código Postal</b>: " + respIP["zip"] + "%0A<b>Gelocalización Latitud</b>: " +
+      respIP["lat"] + "%0A<b>Logitud</b>: " + respIP["lon"] + "%0A<b>Proveedor De Acceso A Internet</b>: " + respIP["isp"] +
+      "%0A<b>Organización</b>: " + respIP["org"] + "%0A<b>Resolvedor de DNS</b>: " + respIP["reverse"] + "%0A<b>IP</b>: " + respIP["query"];
     } if (modo == "DOMINIO") {         
       var rDOMINIOS = [],
       rFECHACREACION = [],
@@ -285,13 +286,13 @@ function ObtenerRespuesta(IP, chid, modo) {
       rA = [],
       rNS = [];
       for (var i = 0; i < respIP["domains"].length; ++i) {
-        rDOMINIOS[i] = "Dominio: " + respIP["domains"][i]["domain"];
-        rFECHACREACION[i] = "Fecha De Registro: " +respIP["domains"][i]["create_date"];
-        rPAIS[i] = "País: " + respIP["domains"][i]["country"]; 
-        rFECHAACTU[i] = "Fecha Última Actualización: " + respIP["domains"][i]["update_date"];
-        rACTIVO[i] = "Dominio Suspendido: " + respIP["domains"][i]["isDead"];
-        rA[i] = "Registro A: " + respIP["domains"][i]["A"];
-        rNS[i] = "Registros NS: " + respIP["domains"][i]["NS"];
+        rDOMINIOS[i] = "<b>Dominio</b>: " + respIP["domains"][i]["domain"];
+        rFECHACREACION[i] = "<b>Fecha De Registro</b>: " +respIP["domains"][i]["create_date"];
+        rPAIS[i] = "<b>País</b>: " + respIP["domains"][i]["country"]; 
+        rFECHAACTU[i] = "<b>Fecha Última Actualización</b>: " + respIP["domains"][i]["update_date"];
+        rACTIVO[i] = "<b>Dominio Suspendido</b>: " + respIP["domains"][i]["isDead"];
+        rA[i] = "<b>Registro A</b>: " + respIP["domains"][i]["A"];
+        rNS[i] = "<b>Registros NS</b>: " + respIP["domains"][i]["NS"];
       }
          
       for(var i = 0; i < rDOMINIOS.length; ++i) {
@@ -299,13 +300,13 @@ function ObtenerRespuesta(IP, chid, modo) {
         "%0A" + rACTIVO[i] + "%0A" + rA[i] + "%0A" + rNS[i];
          
 /* Envia a Telegram los dominios. */
-        PeticionGET("https://api.telegram.org/bot" + TOKEN + "/sendMessage?chat_id=" + chid + "&text=" + respIP2[i]);
+        PeticionGET("https://api.telegram.org/bot" + TOKEN + "/sendMessage?chat_id=" + chid + "&text=" + respIP2[i] + "&parse_mode=html");
       }
         
 /* Si no es el comando Dominio... (Hecho así para manejar utilidades futuras compartiendo código de PING */
     } else {
 /* Envia a Telegram la respuesta de hacer Ping. */
-      PeticionGET("https://api.telegram.org/bot" + TOKEN + "/sendMessage?chat_id=" + chid + "&text=" + respIP);
+      PeticionGET("https://api.telegram.org/bot" + TOKEN + "/sendMessage?chat_id=" + chid + "&text=" + respIP +"&parse_mode=html");
     }
   }
 /* Envia la petición a la API que corresponda, parsea y envia a Telegram. */
