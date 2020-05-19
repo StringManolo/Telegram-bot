@@ -38,34 +38,34 @@ Haz _ping_ al sitio o IP indicada.
 Lista _dominios_ que contengan la palabra indicada.
 
 * *Lista lenguajes publicar:*  
- * apache>
- * arduino>
-* bash>
-* batch>
-* c>
-* cpp>
-* csharp>
-* css>
-* delphi>
-* es>
-* email>
-* html>
-* html5>
-* java>
-* js>
-* json>
-* kotlin>
-* lua>
-* markdown>
-* sql>
-* perl>
-* php>
-* python>
-* r>
-* escala>
-* vbnet>
-* vim>
-* xml>
+    * apache>
+    * arduino>
+    * bash>
+    * batch>
+    * c>
+    * cpp>
+    * csharp>
+    * css>
+    * delphi>
+    * es>
+    * email>
+    * html>
+    * html5>
+    * java>
+    * js>
+    * json>
+    * kotlin>
+    * lua>
+    * markdown>
+    * sql>
+    * perl>
+    * php>
+    * python>
+    * r>
+    * escala>
+    * vbnet>
+    * vim>
+    * xml>
 
 
 * *Apis utilizadas:*
