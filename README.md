@@ -1,6 +1,5 @@
 # TelegramBot  
-## creado en Javascript (ES5)  
-### por @StringManolo.
+### creado en Javascript (ES5) por @StringManolo.
 
 Live versión en [@RabocopBot](https://t.me/RabocopBot)  
 Contestará cuando lo abra en el navegador.  
