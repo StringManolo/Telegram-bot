@@ -69,3 +69,11 @@ Lista _dominios_ que contengan la palabra indicada.
 
 
 * *Apis utilizadas:*
+    *[Cors-Anywhere](https://cors-anywhere.herokuapp.com)  
+    Para realizar peticiones entre dominios.  
+
+    *[Pastebin](https://pastebin.com/api/api_post.php)
+    Facilitar la lectura de pequeños códigos.
+
+    *
+  
