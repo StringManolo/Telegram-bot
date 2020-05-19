@@ -69,17 +69,21 @@ Lista _dominios_ que contengan la palabra indicada.
 
 
 * *Apis utilizadas:*  
-    *[Cors-Anywhere](https://cors-anywhere.herokuapp.com)  
+    [Telegram Bot Api](https://api.telegram.org/bot)  
+    Crear bots para la aplicación de mensajería de Telegram.
+
+    [Cors-Anywhere](https://cors-anywhere.herokuapp.com)  
     Para realizar peticiones entre dominios.  
 
-    *[Pastebin](https://pastebin.com/api/api_post.php)  
+    [Pastebin](https://pastebin.com/api/api_post.php)  
     Facilitar la lectura de pequeños códigos.
 
-    *[Ip-api](http://ip-api.com/json)  
+    [Ip-api](http://ip-api.com/json)  
     Realizar ping sin mantener servidor.
 
-
-    *[DomainsDB](https://api.domainsdb.info)  
+    [DomainsDB](https://api.domainsdb.info)  
     Consultar dominios existentes.
   
   
+Para cualquier consulta podeis dirigiros a mi por telegram.
+_Agradezco críticas_
